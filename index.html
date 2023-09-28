@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="../css/style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webserial API</title>
+</head>
+
+<body>
+    <header>
+        <button id="connect" onclick="connectComPort()">Connect</button>
+        <div>
+            <label for="baudrate">Baudrate:</label>
+            <input class="smalllabel" id="baudrate" type="text" value="9600" list="baudlist">
+            <datalist id="baudlist">
+                <option value="1200">1200</option>
+                <option value="2400">2400</option>
+                <option value="4800">4800</option>
+                <option value="9600">9600</option>
+                <option value="14400">14400</option>
+                <option value="19200">19200</option>
+                <option value="38400">38400</option>
+                <option value="57600">57600</option>
+                <option value="115200">115200</option>
+                <option value="128000">128000</option>
+                <option value="256000">256000</option>
+            </datalist>
+        </div>
+        <div>
+            <label for="data">Data:</label>
+            <input class="smalllabel" id="data" type="text" value="8" list="dataList">
+            <datalist id="dataList">
+                <option value="7">7</option>
+                <option value="8">8</option>
+            </datalist>
+        </div>
+        <div>
+            <label for="stop">Stop:</label>
+            <input class="smalllabel" id="stop" type="text" value="1" list="stopList">
+            <datalist id="stopList">
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </datalist>
+        </div>
+        <div>
+            <label for="parity">Parity:</label>
+            <input class="smalllabel" id="parity" value="even" type="text" list="parityList">
+            <datalist id="parityList">
+                <option value="none">none</option>
+                <option value="odd">odd</option>
+                <option value="even">even</option>
+            </datalist>
+        </div>
+        <div>
+            <button id="modbusModeButton" onclick="enableModbusConfig()">Enable Modbus Config Mode</button>
+        </div>
+    </header>
+
+
+    <div id="containerHead">
+        <h1>Terminal</h1>
+        <div id="terminalSettings">
+            <button id="debugButton" onclick="enableDebug()">Enable Debug</button>
+            <button id="autoscroll" onclick="autoscroll()">Disable Autoscroll</button>
+            <button id="clear" onclick="clearTerminal()">Clear</button>
+        </div>
+    </div>
+
+
+    <div id="display">
+        <div id="terminal" class="containerTerminal"></div>
+    </div>
+    <div id="settings" style="display: none">
+        <div class="container">
+            <br>
+            <label for="sensorCount" id="lableSensorCount">Connected sensors:</label>
+            <input class="smalllabel" id="sensorCount" type="text" value="1">&nbsp;&nbsp;&nbsp;&nbsp;
+            <label for="sensorAddress1">Address Bytes: 1.</label>
+            <input class="smalllabel" id="sensorAddress1" type="text" value="1">
+            <label for="sensorAddress2">2.</label>
+            <input class="smalllabel" id="sensorAddress2" type="text">
+            <label for="sensorAddress3">3.</label>
+            <input class="smalllabel" id="sensorAddress3" type="text">
+            <label for="sensorAddress4">4.</label>
+            <input class="smalllabel" id="sensorAddress4" type="text">
+            <label for="sensorAddress5">5.</label>
+            <input class="smalllabel" id="sensorAddress5" type="text">
+            <br><br>
+            <b>Measurand:</b>
+            <br>
+            <div>
+                <label for="tempMeasurement">Temperature:</label>
+                <input class="checkbox" id="tempMeasurement" type="checkbox">
+                <b> </b>
+                <label for="humMeasurement">Humidity:</label>
+                <input class="checkbox" id="humMeasurement" type="checkbox">
+            </div>
+            <br>
+            <b>Measurement frequency:</b><button onclick="showFrequencyInfo()">info</button>
+            <br>
+            <label for="period">Every:</label>
+            <input class="smalllabel" id="period" type="text" list="periodlist">
+            <datalist id="periodlist">
+                <option value="1">1 sek</option>
+                <option value="1.5">1.5 sek</option>
+                <option value="2">2 sek</option>
+                <option value="5">5 sek</option>
+                <option value="10">10 sek</option>
+                <option value="20">20 sek</option>
+                <option value="30">30 sek</option>
+                <option value="45">45 sek</option>
+                <option value="60">60 sek</option>
+            </datalist>
+            <b style="font-size: 1.5vw;">seconds</b>
+            <br><br>
+            <b>Measurement duration: </b>
+            <br>
+            <label for="manualStop">Manual stop</label>
+            <input class="checkbox" id="manualStop" type="checkbox" onclick="hideTimeSetting()">
+            <label for="measurementTime" id="lableMeasTime">Measurement time:</label>
+            <input class="smalllabel" id="measurementTime" type="text" list="timelist">
+            <datalist id="timelist">
+                <option value="5">5 sek</option>
+                <option value="10">10 sek</option>
+                <option value="20">20 sek</option>
+                <option value="30">30 sek</option>
+                <option value="45">45 sek</option>
+                <option value="60">60 sek</option>
+                <option value="300">5 min</option>
+                <option value="600">10 min</option>
+            </datalist>
+        </div>
+    </div>
+    <div id="frequencyInfo" style="display: none;">
+        <div class="container">
+            <b>Minimal Period when using both measurands: 2 seconds</b><br><br>
+            <b>Minimal period when using one measurand: 1 second</b><br><br>
+            <b>if n sensors are connected the frequency refering to a single sensor is n times longer than the selected
+                frequency</b><br><br>
+            <button onclick="hideFrequencyInfo()">back</button>
+        </div>
+    </div>
+    <div id="modbusConfigInfo" style="display: none;">
+        <div class="container">
+            <b>On the right you can see a configuration window for manual commands</b><br><br>
+            <b>Please note some specifications about this current version:</b><br>
+            <ul>
+                <li>All inputs are integers and will be translated to hex numbers in the script</li>
+                <li>The maximum number of bytes for a command is 6 so no all configurations are possible</li>
+                <li>The crc checksum will automatically be generated and added to the telegram when the send button is
+                    pressed</li>
+                <li>The default setting works as a test for the sensor with the address 1 and should return a
+                    temperature value</li>
+                <li>Switch byte 4 to 6 to receive a humidity value</li>
+                <li>Enter the following configuration in order to change the address of the connected sensor:</li>
+                <li>253, 6, 0, 4, 0, X (X = new address)</li>
+                <li>For further information about the composition of modbus commands please use the
+                    "Explanations"-button</li>
+            </ul>
+
+        </div>
+    </div>
+
+
+    <div id="divNextToTerminal">
+        <div id="menuContent">
+            <div id="measurementSettings" style="display: block;">
+                <h2 class="headerSetting">Measurements</h2>
+                <button id="startMeasurement" onclick="startMeasurements()" style="display: none;">Start</button>
+                <div id="singleMeasurandDisplay">
+                    <label for="defaultAddress">Default Address:&nbsp; </label>
+                    <input id="defaultAddress" type="text" value="1" style="width: 3vw;margin-bottom: 1vw">
+                    <button id="getTemp" onclick="writeToPort(getTemperature)">Temperature</button>
+                    <button id="getHum" onclick="writeToPort(getHumidity)">Humidity</button>
+                </div>
+                <button id="measurement" onclick="showSettings()">Measurement Series </button>
+                <button id="safeSettings" onclick="safeSettings()" style="display: none;">Safe</button>
+            </div>
+            <div id="chartSettings" style="display: none;">
+                <br>
+                <button id="stopMeasurement" onclick="startMeasurements()" >Stop</button>
+                <button id="visualize" onclick="showResults()">Show Chart</button>
+                <button id="scrollbar" onclick="scrollbar()" style="display: none;">Add Scrollbar</button>
+                <div id="axesValues" style="display: none;">
+                    <label for="tempUpper">Temp upper</label>
+                    <input id="tempUpper" type="text"><br>
+                    <label for="tempLower">Temp lower</label>
+                    <input id="tempLower" type="text"><br>
+                    <label for="humUpper">Hum upper</label>
+                    <input id="humUpper" type="text"><br>
+                    <label for="humLower">Hum lower</label>
+                    <input id="humLower" type="text">
+                    <button onclick="submitAxesSettings()">Submit</button>
+                </div>
+                <button id="fixedAxes" onclick="fixAxes()" style="display: none;">Fix Axes</button>
+                <button id="combineCharts" onclick="multipleCharts()" style="display: none;">Combine Charts</button>
+                <button id="export" onclick="exportSettings()" style="display: none;">Export Settings</button>
+                <button id="backButton" onclick="dashboard()" style="display: none;">Back</button>
+            </div>
+            <div id="exportSettings" style="display: none;">
+                <div>
+                    <b style="font-size: 1.5vw;">Filename:</b><br><br>
+                    <input id="fileName" type="text" style="width: 10vw;"><br><br>
+                    <b style="font-size: 1.5vw;">Bress Safe to store data.</br><br>
+                        <b style="font-size: 1.5vw;">Export options in top right corner of the chart</b><br><br>
+                        <button onclick="safeExportSettings()">Safe</button>
+                </div>
+            </div>
+        </div>
+        <div id="modbusConfigDiv" style="display: none;">
+            <h2 class="headerSetting">Modbus Config</h2>
+            <div>
+                <label for="address">Address </label>
+                <input id="address" value="1" type="text" list="addressList">
+                <datalist id="addressList">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </datalist>
+            </div>
+            <div>
+                <label for="functionCode">Function</label>
+                <input id="functionCode" type="text" value="3">
+            </div>
+            <h3>Specifications:</h3>
+            <div>
+                <label for="thirdByte">3rd Byte</label>
+                <input id="thirdByte" type="text" value="0">
+            </div>
+            <div>
+                <label for="fourthByte">4th Byte</label>
+                <input id="fourthByte" type="text" value="0">
+            </div>
+            <div>
+                <label for="fifthByte">5th Byte</label>
+                <input id="fifthByte" type="text" value="0">
+            </div>
+            <div>
+                <label for="sixthByte">6th Byte</label>
+                <input id="sixthByte" type="text" value="1">
+            </div>
+            <button onclick=openModbusExplanations() style="height: 2.5vw;">Explanations</button>
+            <br>
+            <div>
+                <button onclick="sendManualModbus()">Send</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="results" style="display: none;">
+        <br><br>
+        <div class="chartdiv" id="chartdiv1"></div>
+        <div class="chartdiv" id="chartdiv2"></div>
+        <div class="chartdiv" id="chartdiv3"></div>
+        <div class="chartdiv" id="chartdiv4"></div>
+        <div class="chartdiv" id="chartdiv5"></div>
+    </div>
+
+
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/locales/de_DE.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/geodata/germanyLow.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/fonts/notosans-sc.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/plugins/exporting.js"></script>
+
+    <script src="../js/script.js" type="text/javascript"></script>
+</body>
+
+</html>
