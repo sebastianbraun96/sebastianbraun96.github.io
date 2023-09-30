@@ -636,14 +636,16 @@ async function writeToPort(data) {
 }
 
 function incrementBusyCounter() {
-  document.getElementById("terminal").innerHTML += "<br>Increment";
+  document.getElementById("terminal").innerHTML += "<br>";
+  document.getElementById("terminal").innerHTML += busyCounter;
   busyCounter++;
   if ((((!runningMeasurement && busyCounter >= 15) || busyCounter == ((measurementPeriod * 10) - 1)) && measurand != "double") || ((busyCounter == ((measurementPeriod * 5) - 1)) && measurand == "double")) {
     chanelBusy = false;
     busyCounter = 0;
+    clearInterval(busyCounterIntervalId);
+    busyCounterIntervalId = 0;
     if (debug) {
       document.getElementById("terminal").innerHTML += "<br><h4>ChanelBusy has been set = false due to timeout!</h4>";
-
     }
   }
 }
