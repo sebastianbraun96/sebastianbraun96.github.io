@@ -622,7 +622,6 @@ async function writeToPort(data) {
     chanelBusy = true;
     busyCounter = 0;
     readValueArray.length = 0;
-    document.getElementById("terminal").innerHTML += "<br>test ";
     if (busyCounterIntervalId == 0) {
       busyCounterIntervalId = setInterval(incrementBusyCounter, 100);
     }
@@ -635,7 +634,7 @@ async function writeToPort(data) {
 
 function incrementBusyCounter() {
   busyCounter++;
-  if ((((!runningMeasurement && busyCounter >= 15) || busyCounter >= ((measurementPeriod * 10) - 1)) && measurand != "double") || ((busyCounter >= ((measurementPeriod * 5) - 1)) && measurand == "double")) {
+  if ((!runningMeasurement && busyCounter >= 15) || ((busyCounter >= ((measurementPeriod * 10) - 1)) && measurand != "double") || ((busyCounter >= ((measurementPeriod * 5) - 1)) && measurand == "double")) {
     chanelBusy = false;
     busyCounter = 0;
     if (debug) {
