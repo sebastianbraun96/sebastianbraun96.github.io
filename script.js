@@ -622,6 +622,7 @@ async function writeToPort(data) {
     chanelBusy = true;
     busyCounter = 0;
     readValueArray.length = 0;
+    document.getElementById("terminal").innerHTML += "<br>test ";
     if (busyCounterIntervalId == 0) {
       document.getElementById("terminal").innerHTML += "<br>busyCounterInterval has started: ";
 
