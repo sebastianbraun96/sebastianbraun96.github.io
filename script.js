@@ -633,8 +633,6 @@ async function writeToPort(data) {
 }
 
 function incrementBusyCounter() {
-  document.getElementById("terminal").innerHTML += "<br>";
-  document.getElementById("terminal").innerHTML += busyCounter;
   busyCounter++;
   if ((!runningMeasurement && (busyCounter == 15)) || ((busyCounter >= ((measurementPeriod * 10) - 1)) && measurand != "double" && runningMeasurement) || ((busyCounter >= ((measurementPeriod * 5) - 1)) && measurand == "double" && runningMeasurement)) {
     chanelBusy = false;
