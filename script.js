@@ -529,7 +529,7 @@ function crc_generator(array) {
   let crc_Bytes = [parseInt(hexByteSwapped.slice(0, 2), 16), parseInt(hexByteSwapped.slice(2), 16)]; // convert first hex-Byte to Integer and save in Array
 
   if (debug) {
-    document.getElementById("terminal").innerHTML += "CRC dec: ";
+    document.getElementById("terminal").innerHTML += "<br><br>CRC dec: ";
     document.getElementById("terminal").innerHTML += crc;
     document.getElementById("terminal").innerHTML += "<br>CRC hex: ";
     document.getElementById("terminal").innerHTML += hex;
@@ -623,6 +623,8 @@ async function writeToPort(data) {
     busyCounter = 0;
     readValueArray.length = 0;
     if (busyCounterIntervalId == 0) {
+      document.getElementById("terminal").innerHTML += "<br>busyCounterInterval has started: ";
+
       busyCounterIntervalId = setInterval(incrementBusyCounter, 100);
     }
   }
