@@ -633,8 +633,11 @@ async function writeToPort(data) {
 }
 
 function incrementBusyCounter() {
+  document.getElementById("terminal").innerHTML += "<br>";
+  document.getElementById("terminal").innerHTML += busyCounter;
+
   busyCounter++;
-  if ((!runningMeasurement && busyCounter >= 15) || ((busyCounter >= ((measurementPeriod * 10) - 1)) && measurand != "double") || ((busyCounter >= ((measurementPeriod * 5) - 1)) && measurand == "double")) {
+  if ((!runningMeasurement && (busyCounter >= 15)) || ((busyCounter >= ((measurementPeriod * 10) - 1)) && measurand != "double") || ((busyCounter >= ((measurementPeriod * 5) - 1)) && measurand == "double")) {
     chanelBusy = false;
     busyCounter = 0;
     if (debug) {
