@@ -624,8 +624,6 @@ async function writeToPort(data) {
     readValueArray.length = 0;
     document.getElementById("terminal").innerHTML += "<br>test ";
     if (busyCounterIntervalId == 0) {
-      document.getElementById("terminal").innerHTML += "<br>busyCounterInterval has started: ";
-
       busyCounterIntervalId = setInterval(incrementBusyCounter, 100);
     }
   }
@@ -636,17 +634,15 @@ async function writeToPort(data) {
 }
 
 function incrementBusyCounter() {
-  document.getElementById("terminal").innerHTML += "<br>";
-  document.getElementById("terminal").innerHTML += busyCounter;
   busyCounter++;
-  if ((((!runningMeasurement && busyCounter >= 15) || busyCounter == ((measurementPeriod * 10) - 1)) && measurand != "double") || ((busyCounter == ((measurementPeriod * 5) - 1)) && measurand == "double")) {
+  if ((((!runningMeasurement && busyCounter >= 15) || busyCounter >= ((measurementPeriod * 10) - 1)) && measurand != "double") || ((busyCounter >= ((measurementPeriod * 5) - 1)) && measurand == "double")) {
     chanelBusy = false;
     busyCounter = 0;
-    clearInterval(busyCounterIntervalId);
-    busyCounterIntervalId = 0;
     if (debug) {
       document.getElementById("terminal").innerHTML += "<br><h4>ChanelBusy has been set = false due to timeout!</h4>";
     }
+    clearInterval(busyCounterIntervalId);
+    busyCounterIntervalId = 0;
   }
 }
 
