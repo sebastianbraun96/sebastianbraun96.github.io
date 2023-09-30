@@ -637,7 +637,7 @@ async function writeToPort(data) {
 
 function incrementBusyCounter() {
   busyCounter++;
-  if (((busyCounter == ((measurementPeriod * 10) - 1)) && measurand != "double") || ((busyCounter == ((measurementPeriod * 5) - 1)) && measurand == "double")) {
+  if ((((!runningmeasurement && busyCounter >= 15) || busyCounter == ((measurementPeriod * 10) - 1)) && measurand != "double") || ((busyCounter == ((measurementPeriod * 5) - 1)) && measurand == "double")) {
     chanelBusy = false;
     busyCounter = 0;
     if (debug) {
