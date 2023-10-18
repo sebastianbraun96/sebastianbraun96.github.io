@@ -1419,7 +1419,7 @@ function am5ready() {
             valueXField: "date",
             tooltip: am5.Tooltip.new(root, {
               pointerOrientation: "horizontal",
-              labelText: "Id:{name}, {id}: {valueY}%"
+              labelText: "Sensor:{name}, {valueY}%"
             })
           })
         );
@@ -1432,7 +1432,7 @@ function am5ready() {
             valueXField: "date",
             tooltip: am5.Tooltip.new(root, {
               pointerOrientation: "horizontal",
-              labelText: "Id:{name}, {valueY}°C"
+              labelText: "Sensor:{name}, {valueY}°C"
             })
           })
         );
