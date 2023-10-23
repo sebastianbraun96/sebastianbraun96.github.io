@@ -177,7 +177,7 @@
                     <button id="getHum" onclick="writeToPort(getHumidity)">Humidity</button>
                 </div>
                 <button id="measurement" onclick="showSettings()">Measurement Series </button>
-                <button id="safeSettings" onclick="safeSettings()" style="display: none;">Safe</button>
+                <button id="saveSettings" onclick="saveSettings()" style="display: none;">Save</button>
             </div>
             <div id="chartSettings" style="display: none;">
                 <br>
@@ -204,9 +204,9 @@
                 <div>
                     <b style="font-size: 1.5vw;">Filename:</b><br><br>
                     <input id="fileName" type="text" style="width: 10vw;"><br><br>
-                    <b style="font-size: 1.5vw;">Press Safe to store data.</br><br>
+                    <b style="font-size: 1.5vw;">Press Save to store data.</br><br>
                         <b style="font-size: 1.5vw;">Export options in top right corner of the chart</b><br><br>
-                        <button onclick="safeExportSettings()">Safe</button>
+                        <button onclick="saveExportSettings()">Save</button>
                 </div>
             </div>
         </div>

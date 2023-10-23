@@ -175,7 +175,7 @@ async function connectComPort() {
           }
           // if data is received it will be stored in an array (readValueArray)
           // Once this array contains a CR sign the array is converted to a string and displayed in the webpages terminal
-          // if a serial measurement is running (runningMeasurement == true) the data is stored in another Object in safeData()
+          // if a serial measurement is running (runningMeasurement == true) the data is stored in another Object in saveData()
           // there is no interpretation of the data before it is displayed!!
           if (value) {
             if (debug) {
@@ -264,7 +264,7 @@ function dataProcessing(array) {
       }
       let newValue;
       let date = new Date();
-      //timestamp safed for export table if the measurement is from the first adress and a temperature value
+      //timestamp saved for export table if the measurement is from the first adress and a temperature value
       if (runningMeasurement && addressCounter == 0 && measurementCounter % 2 == 0) {
         exportDate = date;
       }
@@ -312,7 +312,7 @@ function dataProcessing(array) {
       if ((compare + 1) == addressBytes.length) {
         // measurements are saved additionally in exportData.
         // when values from all onnected sensors are received the stored data ist put into the export variable in json format
-        safeForExport();
+        saveForExport();
       }
     }
     // if they are not identical a crc error occured and the data is not valid
@@ -365,7 +365,7 @@ function dataProcessing(array) {
 }
 
 
-function safeForExport() {
+function saveForExport() {
   if (measurand == "double" && ((measurementCounter % 2) == 0)) {
     switch (addressBytes.length) {
       case 1: exportData.push({
@@ -665,8 +665,8 @@ function showSettings() {
     document.getElementById("startMeasurement").style.display = "none";
     document.getElementById("measurement").style.display = "none";
     document.getElementById("singleMeasurandDisplay").style.display = "none";
-    document.getElementById("safeSettings").style.display = "block";
-    document.getElementById("safeSettings").style.backgroundColor = "green";
+    document.getElementById("saveSettings").style.display = "block";
+    document.getElementById("saveSettings").style.backgroundColor = "green";
     manualStop = false;
     menu = "Settings";
   }
@@ -700,9 +700,9 @@ function hideTimeSetting() {
 }
 
 // this function stores the values of the settings in global variables
-// when the button 'safe' is pressed
-// it displays the safed settings on the webpages terminal
-function safeSettings() {
+// when the button 'save' is pressed
+// it displays the saved settings on the webpages terminal
+function saveSettings() {
   // assigning variable measurand
   if (document.getElementById("tempMeasurement").checked && document.getElementById("humMeasurement").checked) {
     measurand = "double";
@@ -754,8 +754,8 @@ function safeSettings() {
       document.getElementById("terminal").style.fontSize = "1vw";
     }
     // show new buttons and change content, go back to terminal
-    document.getElementById("safeSettings").style.display = "none";
-    document.getElementById("safeSettings").style.backgroundColor = "white";
+    document.getElementById("saveSettings").style.display = "none";
+    document.getElementById("saveSettings").style.backgroundColor = "white";
     document.getElementById("startMeasurement").innerHTML = "Start";
     document.getElementById("startMeasurement").style.display = "block";
     document.getElementById("startMeasurement").style.backgroundColor = "green";
@@ -792,7 +792,7 @@ function safeSettings() {
 
 /**********************************************Functions about enabling measurements************************************************************************* */
 
-// this function starts the serial measurements with the global variables with the safed values from settings
+// this function starts the serial measurements with the global variables with the saved values from settings
 // depending on the measurands interval functions are called in a specific frequency for a certain time before they are stopped
 async function startMeasurements() {
   if (connected) {
@@ -814,7 +814,7 @@ async function startMeasurements() {
         getHumIntervalId = setInterval(() => { writeToPort(getHumidity); }, measurementPeriod * 1000);
       }
       else {
-        window.alert("Safe settings before starting the measurement!");
+        window.alert("Save settings before starting the measurement!");
       }
       // if settings are valid
       if (measurand != "empty") {
@@ -976,7 +976,7 @@ function enableModbusConfig() {
         window.alert("stop running measurment first!")
       }
       else if (menu == "Settings") {
-        window.alert("safe settings first!")
+        window.alert("save settings first!")
       }
       else {
         document.getElementById("menuContent").style.display = "none";
@@ -1163,7 +1163,7 @@ function exportSettings() {
   document.getElementById("exportSettings").style.display = "block";
 }
 
-function safeExportSettings() {
+function saveExportSettings() {
   if (document.getElementById("fileName").value == "") {
     window.alert("You need to choose a name for the export-file.");
   }
@@ -1599,7 +1599,7 @@ function am5ready() {
 }
 
 // this function adds the latest objects of the data arrays to the series of the chart. 
-// It is called in the function safeData() whenever a new value is added to the array
+// It is called in the function saveData() whenever a new value is added to the array
 function liveData(measurementValue, axisSeries) {
   let size = measurementValue.length;
   let newestValue = measurementValue[size - 1];
